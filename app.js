@@ -108,7 +108,7 @@ const authenticateToken = (request, response, next) => {
 // rETURN LATEST TWEETS OF PEOPLE WHOM USER FOLLOWS
 
 app.get("/user/tweets/feed/", authenticateToken, async (request, response) => {
-  let { username } = request;
+  const { username } = request;
   const getUserTdQuery = `select user_id from user where username="${username}" ;`;
   const getuserId = await database.get(getUserTdQuery);
   // get followers id's
@@ -125,7 +125,7 @@ app.get("/user/tweets/feed/", authenticateToken, async (request, response) => {
 
 // API-4
 app.get("/user/following/", authenticateToken, async (request, response) => {
-  let { username } = request;
+  const { username } = request;
   console.log(username);
   const getUserTdQuery = `select user_id from user where username="${username}" ;`;
   const getuserId = await database.get(getUserTdQuery);
@@ -144,7 +144,7 @@ app.get("/user/following/", authenticateToken, async (request, response) => {
 
 // API-5
 app.get("/user/followers/", authenticateToken, async (request, response) => {
-  let { username } = request;
+  const { username } = request;
   const getUserTdQuery = `select user_id from user where username="${username}" ;`;
   const getuserId = await database.get(getUserTdQuery);
   // get followers id's
@@ -173,7 +173,7 @@ const api6output = (tweetData, likescount, replycount) => {
 app.get("/tweets/:tweetId/", authenticateToken, async (request, response) => {
   const { tweetId } = request.params;
   console.log(tweetId);
-  let { username } = request;
+  const { username } = request;
   console.log(username);
   const getUserTdQuery = `select user_id from user where username="${username}" ;`;
   console.log(username);
@@ -221,7 +221,7 @@ app.get(
   authenticateToken,
   async (request, response) => {
     const { tweetId } = request.params;
-    let { username } = request;
+    const { username } = request;
     const getUserTdQuery = `select user_id from user where username="${username}" ;`;
     const getuserId = await database.get(getUserTdQuery);
     // get followers id's
@@ -264,7 +264,7 @@ app.get(
   authenticateToken,
   async (request, response) => {
     const { tweetId } = request.params;
-    let { username } = request;
+    const { username } = request;
     const getUserTdQuery = `select user_id from user where username="${username}" ;`;
     const getuserId = await database.get(getUserTdQuery);
     // get followers id's
@@ -295,7 +295,7 @@ app.get(
 
 // API-9
 app.get("/user/tweets/", authenticateToken, async (request, response) => {
-  let { username } = request;
+  const { username } = request;
   const getUserTdQuery = `select user_id from user where username="${username}" ;`;
   const getuserId = await database.get(getUserTdQuery);
   const getTweetIdQuery = `select tweet_id from tweet where user_id = ${getuserId.user_id};`;
@@ -309,7 +309,7 @@ app.get("/user/tweets/", authenticateToken, async (request, response) => {
 //API-10
 
 app.post("/user/tweets/", authenticateToken, async (request, response) => {
-  let { username } = request;
+  const { username } = request;
   const getUserIdQuery = `select user_id from user where username="${username}" ;`;
   const getuserId = await database.get(getUserTdQuery);
 
@@ -328,7 +328,7 @@ app.delete("/tweet/:tweetId/", authenticateToken, async (request, response) => {
   const { tweetId } = request.params;
   console.log("hello");
   console.log(tweetId);
-  let { username } = request;
+  const { username } = request;
   console.log(username);
   const getUserTdQuery = `select user_id from user where username="${username}" ;`;
   const getuserId = await database.get(getUserTdQuery);
