@@ -66,9 +66,9 @@ app.post("/login/", async (request, response) => {
     const checkpassword = await bcrypt.compare(password, dbUserExists.password);
     if (checkpassword === true) {
       const payload = { username: username };
-      const jwttoken = jwt.sign(payload, "MY_SECRET_TOKEN");
-      console.log(jwttoken);
-      response.send({ jwttoken });
+      const jwtToken = jwt.sign(payload, "MY_SECRET_TOKEN");
+      console.log(jwtToken);
+      response.send({ jwtToken });
     } else {
       response.status(400);
       response.send("Invalid password");
@@ -83,11 +83,7 @@ const authenticateToken = (request, response, next) => {
   const authHeader = request.headers["authorization"];
   if (authHeader !== undefined) {
     jwtToken = authHeader.split(" ")[1];
-  } else {
-    response.status(401);
-    response.send("Invalid JWT Token");
   }
-  console.log(jwtToken);
   if (jwtToken === undefined) {
     response.status(401);
     response.send("Invalid JWT Token");
@@ -103,7 +99,6 @@ const authenticateToken = (request, response, next) => {
     });
   }
 };
-
 // API-3
 // rETURN LATEST TWEETS OF PEOPLE WHOM USER FOLLOWS
 
@@ -324,29 +319,33 @@ app.post("/user/tweets/", authenticateToken, async (request, response) => {
 });
 
 //Api-11
-app.delete("/tweet/:tweetId/", authenticateToken, async (request, response) => {
-  const { tweetId } = request.params;
-  console.log("hello");
-  console.log(tweetId);
-  const { username } = request;
-  console.log(username);
-  const getUserTdQuery = `select user_id from user where username="${username}" ;`;
-  const getuserId = await database.get(getUserTdQuery);
+app.delete(
+  "/tweets/:tweetId/",
+  authenticateToken,
+  async (request, response) => {
+    const { tweetId } = request.params;
+    console.log("hello");
+    console.log(tweetId);
+    const { username } = request;
+    console.log(username);
+    const getUserTdQuery = `select user_id from user where username="${username}" ;`;
+    const getuserId = await database.get(getUserTdQuery);
 
-  const getuserListQuery = `select  tweet_id from tweet where user_id=${getuserId.user_id};`;
-  const getuserListarray = await database.all(getuserListQuery);
-  const getUserList = getuserListarray.map((eachTweetId) => {
-    return eachTweetId.tweet_id;
-  });
-  console.log(getUserList);
-  if (getUserList.includes(parseInt(tweetId))) {
-    const deleteqyery = `delete from tweet where tweet_id=${tweetId};`;
-    await database.run(deleteqyery);
-    response.send("Tweet Removed");
-  } else {
-    response.status(400);
-    response.send("Invalid Request");
+    const getuserListQuery = `select  tweet_id from tweet where user_id=${getuserId.user_id};`;
+    const getuserListarray = await database.all(getuserListQuery);
+    const getUserList = getuserListarray.map((eachTweetId) => {
+      return eachTweetId.tweet_id;
+    });
+    console.log(getUserList);
+    if (getUserList.includes(parseInt(tweetId))) {
+      const deleteqyery = `delete from tweet where tweet_id=${tweetId};`;
+      await database.run(deleteqyery);
+      response.send("Tweet Removed");
+    } else {
+      response.status(401);
+      response.send("Invalid Request");
+    }
   }
-});
+);
 
 module.exports = app;
